@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
   branch: {
     type: String,
     required: true,
-    enum: ['CSE', 'ECE', 'ME', 'EE', 'CE', 'IT', 'EN', 'CSE(DS)', 'CSE(AIML)', 'IT', 'CSIT', 'CIVIL', 'ECE' ], // Limit to specific options
+    enum: ['CSE', 'ECE', 'ME', 'EE', 'CE', 'EN', 'CSE(DS)', 'CSE(AIML)', 'IT', 'CSIT', 'CIVIL', 'ECE' ], // Limit to specific options
   },
   year: {
     type: String,
