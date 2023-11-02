@@ -12,17 +12,17 @@ const userSchema = new mongoose.Schema({
     unique: true, 
     lowercase: true, 
   },
-  // profile_photo_url: {
-  //   type: String,
-  //   required: true,
-  //   validate: {
-  //     validator: (url) => {
-  //       const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
-  //       return urlRegex.test(url);
-  //     },
-  //     message: 'Invalid URL format for profile photo.',
-  //   },
-  // },
+  profile_photo_url: {
+    type: String,
+    required: true,
+    // validate: {
+    //   validator: (url) => {
+    //     const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+    //     return urlRegex.test(url);
+    //   },
+    //   message: 'Invalid URL format for profile photo.',
+    // },
+  },
   // branch: {
   //   type: String,
   //   required: true,
