@@ -9,12 +9,12 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true, 
+    // unique: true, 
     lowercase: true, 
   },
   profile_photo_url: {
     type: String,
-    required: true,
+    // required: true,
     // validate: {
     //   validator: (url) => {
     //     const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
