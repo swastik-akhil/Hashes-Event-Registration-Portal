@@ -9,7 +9,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-	<link rel="shortcut icon" href="./assets/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="./assets/favicon.ico" type="image/x-icon">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -21,7 +21,7 @@
             padding: 0;
             height: 100vh;
             position: relative;
-			background-color: #262B5B;
+            background-color: #262B5B;
         }
 
         .overlay {
@@ -37,15 +37,14 @@
             z-index: 1; /* Higher z-index to place it above the form */
         }
 
-		.payment-container {
-			text-align: center;
-			background-color: rgba(255, 255, 255, 0.5); /* Adjust the alpha value for transparency */
-			padding: 20px;
-			border-radius: 8px;
-			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-			z-index: 0; /* Lower z-index to place it below the image */
-		}
-
+        .payment-container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.5); /* Adjust the alpha value for transparency */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 0; /* Lower z-index to place it below the image */
+        }
 
         img {
             width: 100px;
@@ -74,6 +73,21 @@
         input[type="submit"]:hover {
             background-color: #180069;
         }
+
+        .go-to-dashboard-btn {
+            margin-top: 20px;
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .go-to-dashboard-btn:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 
@@ -95,20 +109,19 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Pay Now</button>
             </form>
+
+            <!-- Button to go to dashboard -->
+            <button class="go-to-dashboard-btn" onclick="redirectToDashboard()">Go to Dashboard</button>
         </div>
     </div>
 
     <!--Inside index.html -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
-
-
         $(document).ready(function () {
             $('.pay-form').submit(function (e) {
                 e.preventDefault();
-
                 var formData = $(this).serialize();
-
                 $.ajax({
                     url: "/api/v1/user/createOrder",
                     type: "POST",
@@ -124,7 +137,7 @@
                                 "order_id": "" + res.order_id + "",
                                 "handler": function (response) {
                                     alert("Payment Success");
-									console.log(response);
+                                    console.log(response);
                                     $.ajax({
                                         url: "/api/v1/user/checkPayment",
                                         type: "POST",
@@ -150,7 +163,6 @@
                             razorpayObject.on('payment.success', function (response) {
                                 console.log("inside payment success");
                                 console.log(response);
-
                                 alert("Payment Success");
                                 $.ajax({
                                     url: "/api/v1/user/checkPayment",
@@ -160,7 +172,6 @@
                                         payment_id: res.razorpay_payment_id,
                                         signature: response.razorpay_signature || response.signature
                                     }
-									
                                 })
                             });
                             razorpayObject.open();
@@ -171,6 +182,11 @@
                 });
             });
         });
+
+        // Function to redirect to the dashboard
+        function redirectToDashboard() {
+            window.location.href = "/api/v1/dashboard";
+        }
     </script>
 </body>
 

@@ -146,14 +146,18 @@ async function checkPayment(req, res) {
         const user = req.user;
         user.paymentStatus = true;
         await user.save();
-        return res.status(200).json(response);
+        // return res.status(200).json(response);
+        // return res.status(200).redirect("/api/v1/dashboard");
+        return call(req,res, user);
     }
     else{
         response = { status: "failure" };
         console.log("payment failed")
     }
 
-
+function call (req,res, user){
+    res.render("dashboard", {user});
+}
 
 
 

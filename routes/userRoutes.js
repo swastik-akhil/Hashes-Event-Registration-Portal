@@ -14,7 +14,7 @@ router.post("/createOrder", isLoggedIn, createOrder)
 //     res.status(200).json({msg: "Payment status is completed"});
 // })
 // router.get("/markPaymentComplete", markPaymentComplete)
-router.post("/checkPayment", checkPayment)
+router.post("/checkPayment", isLoggedIn, checkPayment)
 
 
 module.exports = router;
