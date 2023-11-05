@@ -5,21 +5,97 @@
     <meta charset="utf-8" />
     <title>Razorpay Web-Integration</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<link rel="shortcut icon" href="./assets/favicon.ico" type="image/x-icon">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            /* background-image: url(https://i.ibb.co/8jBjsfs/brlTeam.png); */
+            background-image: url("https://imageupload.io/ib/O5Ze8izwZ3VfNJR_1699201159.jpg");
+            background-size: cover;
+            background-position: center 30%; /* Adjust the second value to set the distance from the top */
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            position: relative;
+			background-color: #262B5B;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.1); /* Adjust the alpha value for transparency */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1; /* Higher z-index to place it above the form */
+        }
+
+		.payment-container {
+			text-align: center;
+			background-color: rgba(255, 255, 255, 0.5); /* Adjust the alpha value for transparency */
+			padding: 20px;
+			border-radius: 8px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			z-index: 0; /* Lower z-index to place it below the image */
+		}
+
+
+        img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input[type="submit"] {
+            background-color: #2300a3;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #180069;
+        }
+    </style>
 </head>
 
 <body>
-    <hr />
-
-    <div style="display:inline-block">
-        <img src="https://cdn.pixabay.com/photo/2014/04/03/10/55/t-shirt-311732_960_720.png" alt="" width="100px" height="100px">
-        <p>Shirt</p>
-        <p><b>Amount:- Rs. 500</b></p>
-        <form class="pay-form">
-            <input type="hidden" name="name" value="Hashes Registration Fees">
-            <input type="hidden" name="amount" value="500">
-            <input type="hidden" name="description" value="This transaction was for Hashes registration">
-            <input type="submit" value="Pay Now">
-        </form>
+    <div class="overlay">
+        <div class="container payment-container">
+            <img src="https://avatars.githubusercontent.com/u/67686678?s=280&v=4" alt="" width="100px" height="100px">
+            <p>Hashes Registration Fees</p>
+            <p><b> Rs.500/-</b></p>
+            <form class="pay-form">
+                <div class="form-group">
+                    <input type="hidden" name="name" value="">
+                </div>
+                <div class="form-group">
+                    <input type="hidden" name="amount" value="500">
+                </div>
+                <div class="form-group">
+                    <input type="hidden" name="description" value="This transaction was for Hashes registration">
+                </div>
+                <button type="submit" class="btn btn-primary">Pay Now</button>
+            </form>
+        </div>
     </div>
 
     <!--Inside index.html -->
