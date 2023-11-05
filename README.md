@@ -14,7 +14,7 @@ Welcome to the Hashes Event Registration System, a project developed for the Blo
 
 1. **Clone the Repository:**
    ```bash
-   git clone [https://github.com/swastik-akhil/Google-O-Auth-with-Razorpay.git](https://github.com/swastik-akhil/Google-O-Auth-with-Razorpay.git)
+   git clone https://github.com/swastik-akhil/Hashes-Event-Registration-Portal.git
    ```
 
 2. **Install Dependencies:**
@@ -51,7 +51,7 @@ We welcome contributions! If you have suggestions or would like to enhance the f
 
 ## Issues ❓
 
-If you encounter any issues or have questions, please open an issue in the [issue tracker](https://github.com/swastik-akhil/Google-O-Auth-with-Razorpay/issues).
+If you encounter any issues or have questions, please open an issue in the [issue tracker](https://github.com/swastik-akhil/Hashes-Event-Registration-Portal/issues).
 
 ##
 
