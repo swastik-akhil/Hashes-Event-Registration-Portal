@@ -46,9 +46,9 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  razorpayOrderId: {
-    type: String,
-  }
+  // razorpayOrderId: {
+  //   type: String,
+  // }
 
 });
 

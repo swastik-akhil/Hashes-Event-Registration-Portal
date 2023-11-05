@@ -72,64 +72,53 @@ async function addDetails(req,res)  {
 
 const createOrder = async (req, res) => {
     try {
-        console.log(`inside createOrder`)
-        const Razorpay = require('razorpay'); 
-        require("dotenv").config(); 
-        const {RAZORPAY_KEY_ID, RAZORPAY_SECRET_KEY } = process.env;
-        const generateRandomString = require("../utils/generateReciept");
+        console.log(`inside createOrder`);
+        const Razorpay = require('razorpay');
+        require("dotenv").config();
+        const { RAZORPAY_KEY_ID, RAZORPAY_SECRET_KEY } = process.env;
+
 
         const razorpayInstance = new Razorpay({
-                key_id: RAZORPAY_KEY_ID,
-                key_secret: RAZORPAY_SECRET_KEY
-            });
-            console.log(`razorpayInstance: ${razorpayInstance}`)
-            const options = {
-                amount: 500 * 100,
-                currency: "INR",
-                receipt: generateRandomString(),
-                partial_payment: false
-            };
+            key_id: RAZORPAY_KEY_ID,
+            key_secret: RAZORPAY_SECRET_KEY
+        });
 
-            razorpayInstance.orders.create(options, async (err, order) => {
-                if(err){
-                    return res.status(500).json({msg: "Server error"});
-                }
+        console.log(`razorpayInstance: ${razorpayInstance}`);
+        const options = {
+            amount: 500 * 100,
+            currency: "INR",
+            partial_payment: false,
+            payment_capture: 1
+        };
 
-                const successHandler = async (payment_id) => {
-                    console.log(`inside successHandler`)
-                    console.log(`payment_id: ${payment_id}`)
-                    // const user = await User.findOne({email: req.user.email});
-                    const user = req.user;
-                    user.paymentStatus = true;
-                    user.razorpayOrderId = order.id;
-                    await user.save();
-                    res.status(200).json({msg: "Payment successful"});
-                }
+        const order = await razorpayInstance.orders.create(options);
+        // req.user.paymentStatus = true;
+        // await req.user.save();
+        return res.status(200).json({ success:true,
+            msg:'Order Created',
+            order_id:order.id,
+            // amount:amount,
+            key_id:RAZORPAY_KEY_ID,
+            // contact:"8077123987" || req.body.number,           //random number
+            name: req.user.name,       
+            email: req.user.email,                  
+            createdAt : Date.now() });   
 
 
-                // req.user.paymentStatus = true;
-                // await req.user.save();
-                res.status(200).json({
-                        success:true,
-                        msg:'Order Created',
-                        order_id:order.id,
-                        // amount:amount,
-                        key_id:RAZORPAY_KEY_ID,
-                        // contact:"8077123987" || req.body.number,           //random number
-                        name: req.user.name,       
-                        email: req.user.email,                  
-                        createdAt : Date.now()
-                    })      
-            })
 
-        }       
-        catch (error) {
-            console.log(error);
-            res.status(500).json({msg: "Server error"});
-        }
-
+     } catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: "Server error" });
     }
+};
 
 
+async function markPaymentComplete(req, res) {
+    const user = await User.findOne({email: req.user.email});
+    user.paymentStatus = true;
+    await user.save();
+    return res.status(200).json({msg: "Payment status marked completed"});
+}
 
-module.exports = {addDetails, createOrder};
+module.exports = { addDetails, createOrder, markPaymentComplete };
+

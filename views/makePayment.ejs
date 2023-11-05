@@ -55,9 +55,9 @@ $(document).ready(function(){
 						"image": "https://avatars.githubusercontent.com/u/67686678?s=280&v=4",
 						"order_id": ""+res.order_id+"",
 						"handler": function (response){
-							alert("Payment Succeess");
-							showReceipt(res.receipt);
-							window.open("/api/v1/dashboard","_self")
+							// alert("Payment Succeess");
+							// showReceipt(res.receipt);
+							window.open("/api/v1/user/markPaymentComplete","_self")
 						},
 						"prefill": {
 							// "contact":""+res.contact+"",
