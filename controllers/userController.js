@@ -83,7 +83,6 @@ const createOrder = async (req, res) => {
             key_secret: RAZORPAY_SECRET_KEY
         });
 
-        console.log(`razorpayInstance: ${razorpayInstance}`);
         const options = {
             amount: 500 * 100,
             currency: "INR",
@@ -94,6 +93,7 @@ const createOrder = async (req, res) => {
         const order = await razorpayInstance.orders.create(options);
         // req.user.paymentStatus = true;
         // await req.user.save();
+        console.log(`The order is created`)
         return res.status(200).json({ success:true,
             msg:'Order Created',
             order_id:order.id,
@@ -102,7 +102,10 @@ const createOrder = async (req, res) => {
             // contact:"8077123987" || req.body.number,           //random number
             name: req.user.name,       
             email: req.user.email,                  
-            createdAt : Date.now() });   
+            createdAt : Date.now(),
+            order: order
+        
+        });   
 
 
 
@@ -113,12 +116,49 @@ const createOrder = async (req, res) => {
 };
 
 
-async function markPaymentComplete(req, res) {
-    const user = await User.findOne({email: req.user.email});
-    user.paymentStatus = true;
-    await user.save();
-    return res.status(200).json({msg: "Payment status marked completed"});
+// async function markPaymentComplete(req, res) {
+//     const user = await User.findOne({email: req.user.email});
+//     user.paymentStatus = true;
+//     await user.save();
+//     return res.status(200).json({msg: "Payment status marked completed"});
+// }
+
+
+async function checkPayment(req, res) {
+    console.log("inside checkPayment")
+    console.log(req.body)
+    console.log(`req.body.order_id is ${req.body.order_id}`)
+    console.log(`req.body.payment_id is ${req.body.payment_id}`)
+    body = req.body.order_id + "|" + req.body.payment_id;
+    var crypto = require("crypto");
+    var expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_SECRET_KEY)
+      .update(body.toString())
+      .digest("hex");
+
+    console.log("sig" + req.body.signature);
+    console.log("sig" + expectedSignature);
+    // var response = { status: "failure" };
+    if (expectedSignature === req.body.signature){
+        response = { status: "success" };
+        console.log("payment successfull")
+        console.log(`The user before saving is ${req.user}`)
+        const user = req.user;
+        user.paymentStatus = true;
+        await user.save();
+        return res.status(200).json(response);
+    }
+    else{
+        response = { status: "failure" };
+        console.log("payment failed")
+    }
+
+
+
+
+
+
 }
 
-module.exports = { addDetails, createOrder, markPaymentComplete };
+module.exports = { addDetails, createOrder, checkPayment };
 

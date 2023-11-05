@@ -2,87 +2,100 @@
 <html lang="en">
 
 <head>
-	<meta charset="utf-8" />
-	<title>Razorpay Web-Integration</title>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <meta charset="utf-8" />
+    <title>Razorpay Web-Integration</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 </head>
 
 <body>
-	<hr/>
-	
-		<div style="display:inline-block">
-			<img src="https://cdn.pixabay.com/photo/2014/04/03/10/55/t-shirt-311732_960_720.png" alt="" width="100px" height="100px">
-			<p>Shirt</p>
-			<p><b>Amount:- Rs. 500</b></p>
-			<form class="pay-form">
-				<input type="hidden" name="name" value="Hashes Registration Fees">
-				<input type="hidden" name="amount" value="500">
-				<input type="hidden" name="description" value="This transaction was for Hashes egistration">
-				<input type="submit" value="Pay Now">
-			</form>
-		</div>
+    <hr />
 
-	
+    <div style="display:inline-block">
+        <img src="https://cdn.pixabay.com/photo/2014/04/03/10/55/t-shirt-311732_960_720.png" alt="" width="100px" height="100px">
+        <p>Shirt</p>
+        <p><b>Amount:- Rs. 500</b></p>
+        <form class="pay-form">
+            <input type="hidden" name="name" value="Hashes Registration Fees">
+            <input type="hidden" name="amount" value="500">
+            <input type="hidden" name="description" value="This transaction was for Hashes registration">
+            <input type="submit" value="Pay Now">
+        </form>
+    </div>
+
+    <!--Inside index.html -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+
+
+        $(document).ready(function () {
+            $('.pay-form').submit(function (e) {
+                e.preventDefault();
+
+                var formData = $(this).serialize();
+
+                $.ajax({
+                    url: "/api/v1/user/createOrder",
+                    type: "POST",
+                    data: formData,
+                    success: function (res) {
+                        if (res.success) {
+                            var options = {
+                                "key": "" + res.key_id + "",
+                                "amount": "" + res.amount + "",
+                                "currency": "INR",
+                                "name": "BRL",
+                                "image": "https://avatars.githubusercontent.com/u/67686678?s=280&v=4",
+                                "order_id": "" + res.order_id + "",
+                                "handler": function (response) {
+                                    alert("Payment Success");
+									console.log(response);
+                                    $.ajax({
+                                        url: "/api/v1/user/checkPayment",
+                                        type: "POST",
+                                        data: {
+                                            order_id: res.order_id,
+                                            payment_id: response.razorpay_payment_id,
+                                            signature: response.razorpay_signature || response.signature
+                                        }
+                                    })
+                                },
+                                "prefill": {
+                                    "name": "" + res.name + "",
+                                    "email": "" + res.email + ""
+                                },
+                                "theme": {
+                                    "color": "#2300a3"
+                                }
+                            };
+                            var razorpayObject = new Razorpay(options);
+                            razorpayObject.on('payment.failed', function (response) {
+                                alert("Payment Failed");
+                            });
+                            razorpayObject.on('payment.success', function (response) {
+                                console.log("inside payment success");
+                                console.log(response);
+
+                                alert("Payment Success");
+                                $.ajax({
+                                    url: "/api/v1/user/checkPayment",
+                                    type: "POST",
+                                    data: {
+                                        order_id: res.order_id,
+                                        payment_id: res.razorpay_payment_id,
+                                        signature: response.razorpay_signature || response.signature
+                                    }
+									
+                                })
+                            });
+                            razorpayObject.open();
+                        } else {
+                            alert(res.msg);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
-
-<!--Inside index.html -->
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script>
-	function showReceipt(receipt) {
-		alert("Receipt:\n" + JSON.stringify(receipt, null, 2));
-	}
-
-$(document).ready(function(){
-	$('.pay-form').submit(function(e){
-		e.preventDefault();
-
-		var formData = $(this).serialize();
-
-		$.ajax({
-			url:"/api/v1/user/makePayment",
-			type:"POST",
-			data: formData,
-			success:function(res){
-				if(res.success){
-					var options = {
-						"key": ""+res.key_id+"",
-						"amount": ""+res.amount+"",
-						"currency": "INR",
-						"name": ""+res.product_name+"",
-						"description": ""+res.description+"",
-						"image": "https://avatars.githubusercontent.com/u/67686678?s=280&v=4",
-						"order_id": ""+res.order_id+"",
-						"handler": function (response){
-							// alert("Payment Succeess");
-							// showReceipt(res.receipt);
-							window.open("/api/v1/user/markPaymentComplete","_self")
-						},
-						"prefill": {
-							// "contact":""+res.contact+"",
-							"name": ""+res.name+"",
-							"email": ""+res.email+""
-						},
-						"notes" : {
-							"description":""+res.description+""
-						},
-						"theme": {
-							"color": "#2300a3"
-						}
-					};
-					var razorpayObject = new Razorpay(options);
-					razorpayObject.on('payment.failed', function (response){
-							alert("Payment Failed");
-					});
-					razorpayObject.open();
-				}
-				else{
-					alert(res.msg);
-				}
-			}
-		})
-
-	});
-});
-</script>
