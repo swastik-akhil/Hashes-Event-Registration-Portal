@@ -85,12 +85,22 @@
           <div class="col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-4 offset-lg-4">
             <div class="card">
               <h3 class="user-name">Payment Status</h3>
-              <p class="user-email">Payment Successful</p>
+              <p class="user-email">Completed</p>
             </div>
           </div>
         </div>
       </div>
     <% } else { %>
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-4 offset-lg-4">
+            <div class="card">
+              <h3 class="user-name">Payment Status</h3>
+              <p class="user-email">Pending</p>
+            </div>
+          </div>
+        </div>
+      </div>
       <form class="form2" action="/api/v1/user/addDetails" method="post">
         <!-- Branch -->
         <div class="form-group">

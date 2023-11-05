@@ -3,16 +3,24 @@ const passport = require("../config/passportConfig");
 
 const paymentStatus = {
     completed : (req, res, next)=>{
-        const user = User.findOne({email: req.user.email})
-        if(user.paymentStatus === true){
+        if(req.user.paymentStatus === true){
             next();
+        }else{
+            res.status(400).json({
+                sender : "paymentMiddleware",
+                msg: "Payment status is not completed"});
         }
     },
 
     notCompleted: (req, res, next)=>{
-        const user = User.findOne({email: req.user.email})
-        if(user.paymentStatus === false){
+        // console.log(user)
+        console.log(`inside payment middleware ${req.user}`)
+        if(req.user.paymentStatus === false){
             next();
+        }else{
+            res.status(400).json({
+                sender : "paymentMiddleware",
+                msg: "Payment status is completed"});
         }
     }
 }

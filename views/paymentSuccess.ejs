@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Success</title>
+</head>
+
+<style>
+
+body {
+    background-color: #4CAF50;  /* Green */
+    color: #fff;  
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: larger;
+}
+
+    p, h1, h3{
+        text-align: center;
+    }
+
+
+
+
+</style>
+
+<body>
+    <section>
+
+        <hr><br>
+        <h1>Payment Success</h1>
+
+        <p>Payment was successful. Thank you for your patronage.</p>
+
+        <br><hr><br>
+
+        <h3>OrderId</h3>
+        <% order.id %>
+
+        <h3>Amount</h3>
+        <% order.amount %>
+
+        <h3>Currency</h3>
+        <% order.currency %>
+
+        <h3>Receipt</h3>
+        <% order.receipt %>
+
+        <h3>Created At</h3>
+        <% order.createdAt %>
+
+        <br><hr><br>
+
+
+    </section>
+</body>
+</html>
