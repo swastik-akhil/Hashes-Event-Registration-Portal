@@ -30,6 +30,9 @@
 <!--Inside index.html -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
+	function showReceipt(receipt) {
+		alert("Receipt:\n" + JSON.stringify(receipt, null, 2));
+	}
 
 $(document).ready(function(){
 	$('.pay-form').submit(function(e){
@@ -49,11 +52,12 @@ $(document).ready(function(){
 						"currency": "INR",
 						"name": ""+res.product_name+"",
 						"description": ""+res.description+"",
-						"image": "https://dummyimage.com/600x400/000/fff",
+						"image": "https://avatars.githubusercontent.com/u/67686678?s=280&v=4",
 						"order_id": ""+res.order_id+"",
 						"handler": function (response){
 							alert("Payment Succeess");
-							window.open("/","_self")
+							showReceipt(res.receipt);
+							window.open("/api/v1/dashboard","_self")
 						},
 						"prefill": {
 							// "contact":""+res.contact+"",
@@ -81,5 +85,4 @@ $(document).ready(function(){
 
 	});
 });
-
 </script>

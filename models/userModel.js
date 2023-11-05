@@ -45,6 +45,9 @@ const userSchema = new mongoose.Schema({
   paymentStatus: {
     type: Boolean,
     default: false,
+  },
+  razorpayOrderId: {
+    type: String,
   }
 
 });

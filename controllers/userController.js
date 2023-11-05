@@ -94,29 +94,36 @@ const createOrder = async (req, res) => {
                 if(err){
                     return res.status(500).json({msg: "Server error"});
                 }
-                // const returnedOrder = {
-                //     orderId: order.id,
-                //     amount: order.amount,
-                //     currency: order.currency,
-                //     receipt: order.receipt,
-                //     createdAt: order.created_at
 
-                // }
-                // res.status(200).render("paymentSuccess", {order})
+                const successHandler = async (payment_id) => {
+                    console.log(`inside successHandler`)
+                    console.log(`payment_id: ${payment_id}`)
+                    // const user = await User.findOne({email: req.user.email});
+                    const user = req.user;
+                    user.paymentStatus = true;
+                    user.razorpayOrderId = order.id;
+                    await user.save();
+                    res.status(200).json({msg: "Payment successful"});
+                }
+
+
+                // req.user.paymentStatus = true;
+                // await req.user.save();
                 res.status(200).json({
                         success:true,
                         msg:'Order Created',
                         order_id:order.id,
                         // amount:amount,
                         key_id:RAZORPAY_KEY_ID,
-                        contact:"8077123987",           //random number
-                        name: "Akhil Mittal",       
-                        email: "akhil@gmail.com",
-                        createdAt : Date.now()})      //random email
+                        // contact:"8077123987" || req.body.number,           //random number
+                        name: req.user.name,       
+                        email: req.user.email,                  
+                        createdAt : Date.now()
+                    })      
             })
 
         }       
-         catch (error) {
+        catch (error) {
             console.log(error);
             res.status(500).json({msg: "Server error"});
         }
