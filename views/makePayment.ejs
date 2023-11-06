@@ -136,7 +136,6 @@
                                 "order_id": "" + res.order_id + "",
                                 "handler": function (response) {
                                     // alert("Payment Success");
-                                    console.log(response);
                                     $.ajax({
                                         url: "/user/checkPayment",
                                         type: "POST",
@@ -147,7 +146,6 @@
                                         },
                                         success: function (checkPaymentResponse) {
                                             // Handle the checkPaymentResponse here
-                                            console.log("Check Payment Response:", checkPaymentResponse);
 
                                             // Optionally, redirect to the dashboard
                                             redirectToDashboard();
@@ -171,10 +169,6 @@
                                 alert("Payment Failed");
                             });
                             razorpayObject.on('payment.success', function (response) {
-                                console.log("inside payment success");
-                                console.log(response);
-                                // alert("Payment Success");
-                                // Note: The success callback for Razorpay already handles the checkPayment
                             });
                             razorpayObject.open();
                         } else {

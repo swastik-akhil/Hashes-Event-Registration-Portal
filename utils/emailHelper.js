@@ -9,9 +9,6 @@ async function sendMail(recieverEmailId, orderId){
     }
   })
 
-  console.log("inside email helper ")
-  console.log(`$orderId is ${orderId}`)
-
   const mailOptions = {
     form : process.env.EMAIL_ID,
     to : recieverEmailId,
@@ -23,7 +20,6 @@ async function sendMail(recieverEmailId, orderId){
 
   try{
     await transporter.sendMail(mailOptions);
-    console.log("Email sent successfully");
   }catch(e){
     console.log("Error while sending email");
     console,log(e);

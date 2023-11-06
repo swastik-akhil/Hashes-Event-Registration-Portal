@@ -15,17 +15,6 @@ const authController = {
 
   dashboard: (req, res) => {
     if (req.isAuthenticated()) {
-      console.log("user is authenticated");
-      console.log("req.user:", req.user); 
-      // if (req.user) {
-      //   console.log("User properties:");
-      //   console.log("displayName:", req.user.displayName);
-      //   console.log("emails:", req.user.emails);
-      //   console.log("photos:", req.user.photos);
-      // } else {
-      //   console.log("req.user is undefined");
-      // }
-
       res.render("dashboard", { user: req.user });
     }
   },

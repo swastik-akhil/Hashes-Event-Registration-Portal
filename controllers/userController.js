@@ -37,7 +37,7 @@ async function addDetails(req,res)  {
             return res.status(200).render("makePayment", {user})
             // return res.render("test")
         }catch(err){
-            return res.status(400).json({msg: "error while creating user (with rollNumber)"}, err);
+            return res.status(400).json({msg: "error while creating user (with rollNumber)", err} );
         }
         
     }
@@ -51,7 +51,7 @@ async function addDetails(req,res)  {
         return res.status(400).render("makePayment", {user});
         // return res.render("test")
     }catch(e){
-        return res.status(400).json({msg: "error while creating user (without rollNumber)"}, e);
+        return res.status(400).json({msg: "error while creating user (without rollNumber)", e},);
     }
 
 }
@@ -60,7 +60,6 @@ async function addDetails(req,res)  {
 
 const createOrder = async (req, res) => {
     try {
-        console.log(`inside createOrder`);
         const Razorpay = require('razorpay');
         require("dotenv").config();
         const { RAZORPAY_KEY_ID, RAZORPAY_SECRET_KEY } = process.env;
@@ -79,7 +78,6 @@ const createOrder = async (req, res) => {
         };
 
         const order = await razorpayInstance.orders.create(options);
-        console.log(`The order is created`)
         return res.status(200).json({ success:true,
             msg:'Order Created',
             order_id:order.id,
@@ -98,20 +96,7 @@ const createOrder = async (req, res) => {
     }
 };
 
-
-// async function markPaymentComplete(req, res) {
-//     const user = await User.findOne({email: req.user.email});
-//     user.paymentStatus = true;
-//     await user.save();
-//     return res.status(200).json({msg: "Payment status marked completed"});
-// }
-
-
 async function checkPayment(req, res) {
-    console.log("inside checkPayment")
-    console.log(req.body)
-    console.log(`req.body.order_id is ${req.body.order_id}`)
-    console.log(`req.body.payment_id is ${req.body.payment_id}`)
     body = req.body.order_id + "|" + req.body.payment_id;
     var crypto = require("crypto");
     var expectedSignature = crypto
@@ -119,34 +104,10 @@ async function checkPayment(req, res) {
       .update(body.toString())
       .digest("hex");
 
-    console.log("sig" + req.body.signature);
-    console.log("sig" + expectedSignature);
-    // var response = { status: "failure" };
-    // if (expectedSignature === req.body.signature){
-    //     response = { status: "success" };
-    //     console.log("payment successfull")
-    //     console.log(`The user before saving is ${req.user}`)
-    //     const user = req.user;
-    //     user.paymentStatus = true;
-    //     await user.save();
-    //     sendMail(user.email, req.body.order_id);
-    //     // return res.status(200).json("Email sent successfully");
-    //     // return res.render("test")
-    //     // return res.status(200).redirect("/api/v1/dashboard");
-    //     return res.status(200).render("dashboard");
-    // }
-    // else{
-    //     response = { status: "failure" };
-    //     console.log("payment failed")
-    //     // res.redirect("/api/v1/us");
-    // }
-
     if (expectedSignature === req.body.signature) {
         const user = req.user;
         user.paymentStatus = true;
         user.save().then(() => {
-            console.log("Payment successful");
-            console.log(`The user before saving is ${req.user}`);
             sendMail(user.email, req.body.order_id);
             // Redirect to the "dashboard" page using a GET request
             return res.status(200).redirect("/dashboard");
@@ -156,7 +117,6 @@ async function checkPayment(req, res) {
         });
     } else {
         response = { status: "failure" };
-        console.log("Payment failed");
         // Handle payment failure, e.g., redirect or send an error response
         return res.status(400).json({ status: "failure", error: "Payment failed" });
     }

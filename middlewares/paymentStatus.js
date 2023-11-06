@@ -13,8 +13,6 @@ const paymentStatus = {
     },
 
     notCompleted: (req, res, next)=>{
-        // console.log(user)
-        console.log(`inside payment middleware ${req.user}`)
         if(req.user.paymentStatus === false){
             next();
         }else{
