@@ -1,5 +1,4 @@
 const User = require('../models/userModel');
-// const emailHelper = require("../utils/emailHelper")
 const {sendMail} = require("../utils/emailHelper")
 
 async function addDetails(req,res)  {
@@ -10,32 +9,25 @@ async function addDetails(req,res)  {
     }
     
     const {branch, year, studentNumber} = req.body;
+
+    // if(studentNumber.length !== 8){
+    //     return res.status(400).json({msg: "Invalid student number, must have 8 digits"});
+    // }
     
     if(!branch || !year || !studentNumber){
         return res.status(400).json({msg: "Please enter all fields"});
     }
     
-    // if (typeof studentNumber !== 'number' || isNaN(studentNumber)) {
-    //     return res.status(400).json({ msg: "Please enter a valid student number" });
-    //   }
-      
-    // let rollNumber;
 
     if(req.body.rollNumber){
-        // if(typeof rollNumber !== 'number' || isNaN(rollNumber)){
-        //     return res.status(400).json({msg: "Please enter a valid roll number"});
-        // }
+        
         const {rollNumber} = req.body;
 
+        // if(rollNumber.length !== 13){
+        //     return res.status(400).json({msg: "Invalid roll number, must have 13 digits"});
+        // }
         try{
             
-            // const existingUser = await User.find({studentNumber, rollNumber});
-            
-            // if(existingUser){
-            //     return res.status(400).json({msg: "Student number already exists"});
-            //     // return res.render("dashboard", {user})
-            // }
-
             user.branch = branch;
             user.year = year;
             user.studentNumber = studentNumber;
@@ -51,12 +43,6 @@ async function addDetails(req,res)  {
     }
 
     try{
-        // const existingUser = await User.find({studentNumber});
-        // if(existingUser){
-        //     // return res.render("dashboard", {user})
-        //     return res.status(400).json({msg: "Student number already exists"});
-        // }
-
         user.branch = branch;
         user.year = year;
         user.studentNumber = studentNumber;
@@ -93,23 +79,18 @@ const createOrder = async (req, res) => {
         };
 
         const order = await razorpayInstance.orders.create(options);
-        // req.user.paymentStatus = true;
-        // await req.user.save();
         console.log(`The order is created`)
         return res.status(200).json({ success:true,
             msg:'Order Created',
             order_id:order.id,
             // amount:amount,
             key_id:RAZORPAY_KEY_ID,
-            // contact:"8077123987" || req.body.number,           //random number
             name: req.user.name,       
             email: req.user.email,                  
             createdAt : Date.now(),
             order: order
         
         });   
-
-
 
      } catch (error) {
         console.log(error);
@@ -141,44 +122,48 @@ async function checkPayment(req, res) {
     console.log("sig" + req.body.signature);
     console.log("sig" + expectedSignature);
     // var response = { status: "failure" };
-    if (expectedSignature === req.body.signature){
-        response = { status: "success" };
-        console.log("payment successfull")
-        console.log(`The user before saving is ${req.user}`)
+    // if (expectedSignature === req.body.signature){
+    //     response = { status: "success" };
+    //     console.log("payment successfull")
+    //     console.log(`The user before saving is ${req.user}`)
+    //     const user = req.user;
+    //     user.paymentStatus = true;
+    //     await user.save();
+    //     sendMail(user.email, req.body.order_id);
+    //     // return res.status(200).json("Email sent successfully");
+    //     // return res.render("test")
+    //     // return res.status(200).redirect("/api/v1/dashboard");
+    //     return res.status(200).render("dashboard");
+    // }
+    // else{
+    //     response = { status: "failure" };
+    //     console.log("payment failed")
+    //     // res.redirect("/api/v1/us");
+    // }
+
+    if (expectedSignature === req.body.signature) {
         const user = req.user;
         user.paymentStatus = true;
-        await user.save();
-        // const message = `Your registration has been done successfully`;     //TODO: add email in message
-        // const options = {
-        //     email : user.email,
-        //     subject : "Registration successful",
-        //     message
-        // }
-        // try{
-        //     await emailHelper(options)
-        //     return res.status(200).json({status : "success", message : "Email sent successfully"});
-        // }catch(e){
-        //     console.log(e);
-        //     return res.status(400).json({status : "failed", message : "Something went wrong while sending email"});
-        // }
-        await sendMail(user.email);
-        return res.status(200).json("Email sent successfully");
-        // return res.status(200).redirect("/api/v1/dashboard");
-        // return call(req,res, user);
-    }
-    else{
+        user.save().then(() => {
+            console.log("Payment successful");
+            console.log(`The user before saving is ${req.user}`);
+            sendMail(user.email, req.body.order_id);
+            // Redirect to the "dashboard" page using a GET request
+            return res.status(200).redirect("/dashboard");
+        }).catch((error) => {
+            console.error("Error saving user:", error);
+            return res.status(500).json({ status: "failure", error: "Error saving user" });
+        });
+    } else {
         response = { status: "failure" };
-        console.log("payment failed")
+        console.log("Payment failed");
+        // Handle payment failure, e.g., redirect or send an error response
+        return res.status(400).json({ status: "failure", error: "Payment failed" });
     }
-
-// function call (req,res, user){
-//     res.render("dashboard", {user});
-// }
-
-
+    
+    
 
 
 }
 
 module.exports = { addDetails, createOrder, checkPayment };
-

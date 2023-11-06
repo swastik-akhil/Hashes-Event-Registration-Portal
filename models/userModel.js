@@ -35,12 +35,12 @@ const userSchema = new mongoose.Schema({
   studentNumber: {
     type: Number,
     // required: true,
-    // unique: true, 
+    unique: true, 
   },
   rollNumber: {
     type: Number,
     // required: true,
-    // unique: true, 
+    unique: true, 
   },
   paymentStatus: {
     type: Boolean,

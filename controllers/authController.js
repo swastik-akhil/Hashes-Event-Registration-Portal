@@ -10,7 +10,7 @@ const authController = {
   googleOAuth: passport.authenticate("google", { scope: ["profile", "email"] }),
 
   googleOAuthCallback: passport.authenticate("google", {
-    failureRedirect: "/api/v1",
+    failureRedirect: "/",
   }),
 
   dashboard: (req, res) => {
@@ -25,14 +25,15 @@ const authController = {
       // } else {
       //   console.log("req.user is undefined");
       // }
-      
+
       res.render("dashboard", { user: req.user });
     }
   },
 
+  
   logout: (req, res) => {
     req.logout((err) => console.log(err));
-    res.redirect("/api/v1/login");
+    res.redirect("/");
   },
 };
 

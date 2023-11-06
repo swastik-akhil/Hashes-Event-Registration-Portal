@@ -8,7 +8,7 @@ router.get("/test", isLoggedIn, paymentStatus.notCompleted, (req, res)=>{
     res.render("test")
 })
 router.post("/addDetails", isLoggedIn, addDetails);
-router.post("/createOrder", isLoggedIn, createOrder)
+router.post("/createOrder", isLoggedIn, paymentStatus.notCompleted ,createOrder)
     // res.render("test")
 // router.post("/paymentStatus", isLoggedIn, paymentStatus.completed, (req, res)=>{
 //     res.status(200).json({msg: "Payment status is completed"});

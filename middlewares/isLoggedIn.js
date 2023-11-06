@@ -7,7 +7,7 @@ function isLoggedIn (req, res, next) {
     }
     else {
     console.log("req.user is undefined");
-    res.redirect("/api/v1/login");
+    res.redirect("/");
     }
 };
 

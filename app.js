@@ -44,8 +44,8 @@ app.use(express.urlencoded({ extended: true }));
 
 
 // Use authentication routes under "/api/v1" prefix
-app.use("/api/v1", authRoutes);
-app.use("/api/v1/user", userRouter)
+app.use("/", authRoutes);
+app.use("/user", userRouter)
 
 // Start the server
 app.listen(process.env.PORT, () => {
