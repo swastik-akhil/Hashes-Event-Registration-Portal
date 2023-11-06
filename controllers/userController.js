@@ -10,9 +10,9 @@ async function addDetails(req,res)  {
     
     const {branch, year, studentNumber} = req.body;
 
-    // if(studentNumber.length !== 8){
-    //     return res.status(400).json({msg: "Invalid student number, must have 8 digits"});
-    // }
+    if(studentNumber.length !== 8){
+        return res.status(400).json({msg: "Invalid student number, must have 8 digits"});
+    }
     
     if(!branch || !year || !studentNumber){
         return res.status(400).json({msg: "Please enter all fields"});
@@ -23,9 +23,9 @@ async function addDetails(req,res)  {
         
         const {rollNumber} = req.body;
 
-        // if(rollNumber.length !== 13){
-        //     return res.status(400).json({msg: "Invalid roll number, must have 13 digits"});
-        // }
+        if(rollNumber.length !== 13){
+            return res.status(400).json({msg: "Invalid roll number, must have 13 digits"});
+        }
         try{
             
             user.branch = branch;
