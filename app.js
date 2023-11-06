@@ -32,7 +32,7 @@ app.use(expressSession({
 const path = require("path");
 const staticPath = path.join(__dirname, "./views");
 app.use(express.static(staticPath));
-const ejs = require("ejs");
+require("ejs");
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 

@@ -1,6 +1,5 @@
-// controllers/authController.js
 const passport = require("../config/passportConfig");
-const User = require("../models/userModel");
+// const User = require("../models/userModel");
 
 const authController = {
   login: (req, res) => {
