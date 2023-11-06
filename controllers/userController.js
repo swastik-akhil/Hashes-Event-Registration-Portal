@@ -1,4 +1,6 @@
 const User = require('../models/userModel');
+// const emailHelper = require("../utils/emailHelper")
+const {sendMail} = require("../utils/emailHelper")
 
 async function addDetails(req,res)  {
 
@@ -146,18 +148,32 @@ async function checkPayment(req, res) {
         const user = req.user;
         user.paymentStatus = true;
         await user.save();
-        // return res.status(200).json(response);
+        // const message = `Your registration has been done successfully`;     //TODO: add email in message
+        // const options = {
+        //     email : user.email,
+        //     subject : "Registration successful",
+        //     message
+        // }
+        // try{
+        //     await emailHelper(options)
+        //     return res.status(200).json({status : "success", message : "Email sent successfully"});
+        // }catch(e){
+        //     console.log(e);
+        //     return res.status(400).json({status : "failed", message : "Something went wrong while sending email"});
+        // }
+        await sendMail(user.email);
+        return res.status(200).json("Email sent successfully");
         // return res.status(200).redirect("/api/v1/dashboard");
-        return call(req,res, user);
+        // return call(req,res, user);
     }
     else{
         response = { status: "failure" };
         console.log("payment failed")
     }
 
-function call (req,res, user){
-    res.render("dashboard", {user});
-}
+// function call (req,res, user){
+//     res.render("dashboard", {user});
+// }
 
 
 
