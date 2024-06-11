@@ -13,10 +13,10 @@ const googleAuthOptions = {
 passport.use(new GoogleStrategy(googleAuthOptions, async (accessToken, refreshToken, profile, done) => {
 
   const email = profile.emails[0].value;
-  const domain = email.split('@')[1];
-  if(domain !== "akgec.ac.in"){
-    return done(null, false, {message: "Please use your AKGEC email address"});
-  }
+  // const domain = email.split('@')[1];
+  // if(domain !== "akgec.ac.in"){
+  //   return done(null, false, {message: "Please use your AKGEC email address"});
+  // }
   
   try {
     const existingUser = await User.findOne({ email });    
