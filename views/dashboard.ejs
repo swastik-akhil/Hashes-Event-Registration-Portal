@@ -43,7 +43,7 @@
       text-decoration: none;
     }
     .form2 {
-  margin-top: 5%; /* Adjust the percentage as needed */
+  margin-top: 5%; 
   margin-left: 30%;
   margin-right: 30%;
   margin-bottom: 5%;
@@ -134,18 +134,35 @@
         <!-- Student Number -->
         <div class="form-group">
           <label for="studentNumber">Student Number</label>
-          <input type="number" class="form-control" id="studentNumber" name="studentNumber" required />
+          <input type="number" class="form-control" id="studentNumber" name="studentNumber" placeholder="Enter 6 digit student number" required />
+          <div id="error-message" style="color: red;"></div>
         </div>
+        
 
         <!-- Roll Number -->
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label for="rollNumber">Roll Number</label>
           <input type="number" class="form-control" id="rollNumber" name="rollNumber" />
-        </div>
+        </div> -->
 
         <!-- Submit Button -->
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-success">Procceed</button>
       </form>
+
+      <script>
+        document.getElementById("studentNumber").addEventListener("input", function() {
+          const inputValue = this.value.trim();
+          const errorMessage = document.getElementById("error-message");
+    
+          if (inputValue.length !== 6 || isNaN(inputValue)) {
+            errorMessage.textContent = "Please enter exactly 6 digits.";
+          } else {
+            errorMessage.textContent = "";
+          }
+        });
+      </script>
+
+
     <% } %>
   </section>
 </body>

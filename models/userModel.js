@@ -37,18 +37,18 @@ const userSchema = new mongoose.Schema({
     // required: true,
     unique: true, 
   },
-  rollNumber: {
-    type: Number,
-    // required: true,
-    unique: true, 
-  },
+  // rollNumber: {
+  //   type: Number,
+  //   required: true,
+  //   unique: true, 
+  // },
   paymentStatus: {
     type: Boolean,
     default: false,
   },
-  // razorpayOrderId: {
-  //   type: String,
-  // }
+  paymentId: {
+    type: String,
+  }
 
 });
 

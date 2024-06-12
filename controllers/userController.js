@@ -1,6 +1,6 @@
 const User = require('../models/userModel');
 const {sendMail} = require("../utils/emailHelper")
-
+require("dotenv").config();
 async function addDetails(req,res)  {
 
     const user = await User.findOne({email: req.user.email});
@@ -10,8 +10,8 @@ async function addDetails(req,res)  {
     
     const {branch, year, studentNumber} = req.body;
 
-    if(studentNumber.length !== 8){
-        return res.status(400).json({msg: "Invalid student number, must have 8 digits"});
+    if(studentNumber.length !== 6){
+        return res.status(400).json({msg: "Invalid student number, must have 6 digits"});
     }
     
     if(!branch || !year || !studentNumber){
@@ -19,28 +19,28 @@ async function addDetails(req,res)  {
     }
     
 
-    if(req.body.rollNumber){
+    // if(req.body.rollNumber){
         
-        const {rollNumber} = req.body;
+    //     const {rollNumber} = req.body;
 
-        if(rollNumber.length !== 13){
-            return res.status(400).json({msg: "Invalid roll number, must have 13 digits"});
-        }
-        try{
+    //     if(rollNumber.length !== 13){
+    //         return res.status(400).json({msg: "Invalid roll number, must have 13 digits"});
+    //     }
+    //     try{
             
-            user.branch = branch;
-            user.year = year;
-            user.studentNumber = studentNumber;
-            user.rollNumber = rollNumber;
-            await user.save();
+    //         user.branch = branch;
+    //         user.year = year;
+    //         user.studentNumber = studentNumber;
+    //         user.rollNumber = rollNumber;
+    //         await user.save();
 
-            return res.status(200).render("makePayment", {user})
-            // return res.render("test")
-        }catch(err){
-            return res.status(400).json({msg: "error while creating user (with rollNumber)", err} );
-        }
+    //         return res.status(200).render("makePayment", {user})
+    //         // return res.render("test")
+    //     }catch(err){
+    //         return res.status(400).json({msg: "error while creating user (with rollNumber)", err} );
+    //     }
         
-    }
+    // }
 
     try{
         user.branch = branch;
@@ -107,6 +107,10 @@ async function checkPayment(req, res) {
     if (expectedSignature === req.body.signature) {
         const user = req.user;
         user.paymentStatus = true;
+        user.paymentId = req.body.payment_id;
+        if(user.email == process.env.TEST_EMAIL){
+            user.paymentStatus = false;
+        }
         user.save().then(() => {
             sendMail(user.email, req.body.order_id);
             // Redirect to the "dashboard" page using a GET request
