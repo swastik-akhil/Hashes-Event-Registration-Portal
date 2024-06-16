@@ -17,29 +17,41 @@ app.use(helmet());
 app.use(express.urlencoded({ extended: true, limit: "1kb" }));
 app.use(express.json({ limit: "1kb" }));
 
-const rateLimit = require('express-rate-limit');
 
-const getClientIp = (req) => {
-  return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+const ipRequests = {};
+
+// Custom rate limiting middleware
+const customRateLimit = (req, res, next) => {
+  const clientIp = req.ip;
+
+  // Initialize IP tracking if not already present
+  if (!ipRequests[clientIp]) {
+    ipRequests[clientIp] = {
+      count: 0,
+      resetTime: Date.now() + 5 * 60 * 1000, // 5 minutes
+    };
+  }
+
+  // Check if IP has exceeded limit
+  if (ipRequests[clientIp].count >= 100 && Date.now() < ipRequests[clientIp].resetTime) {
+    return res.status(429).send('Too many requests, please try again later.');
+  }
+
+  // Increment request count for the IP
+  ipRequests[clientIp].count++;
+
+  // Reset count after windowMs
+  if (Date.now() >= ipRequests[clientIp].resetTime) {
+    ipRequests[clientIp].count = 0;
+    ipRequests[clientIp].resetTime = Date.now() + 5 * 60 * 1000; // 5 minutes
+  }
+
+  // Proceed to next middleware
+  next();
 };
 
-
-const ipKeyGenerator = (req) => {
-  return getClientIp(req);
-};
-
-const limiter = rateLimit({
-  windowMs: 5 * 60 * 1000,  // 5 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  keyGenerator: ipKeyGenerator, // Generate key based on client IP address
-});
-
-// Applying limiter middleware globally to all routes
-app.use(limiter);
-
-async function onRateLimit(req, res, options) {
-  res.status(429).send("Too many requests, please try again later.");
-}
+// Apply custom rate limiting middleware globally to all routes
+app.use(customRateLimit);
 
 
 
