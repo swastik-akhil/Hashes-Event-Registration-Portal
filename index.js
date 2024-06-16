@@ -32,16 +32,11 @@ const limiter = rateLimit({
 // Applying limiter middleware globally to all routes
 app.use(limiter);
 
-// Define your routes
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
-app.use(limiter);
-
-
 async function onRateLimit(req, res, options) {
   res.status(429).send("Too many requests, please try again later.");
 }
+
+
 
 
 const dbString = process.env.MONGODB_URL;
