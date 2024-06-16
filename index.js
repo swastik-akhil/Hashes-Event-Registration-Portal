@@ -18,15 +18,20 @@ app.use(express.urlencoded({ extended: true, limit: "1kb" }));
 app.use(express.json({ limit: "1kb" }));
 
 const rateLimit = require('express-rate-limit');
-const ipKeyGenerator = (req) => {
-  return req.ip; // Using IP address as the key
+
+const getClientIp = (req) => {
+  return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 };
 
-// Rate limiting middleware setup
+
+const ipKeyGenerator = (req) => {
+  return getClientIp(req);
+};
+
 const limiter = rateLimit({
   windowMs: 5 * 60 * 1000,  // 5 minutes
   max: 100, // limit each IP to 100 requests per windowMs
-  keyGenerator: ipKeyGenerator, // Generate key based on IP address
+  keyGenerator: ipKeyGenerator, // Generate key based on client IP address
 });
 
 // Applying limiter middleware globally to all routes
