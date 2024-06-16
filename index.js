@@ -17,7 +17,6 @@ app.use(helmet());
 app.use(express.urlencoded({ extended: true, limit: "1kb" }));
 app.use(express.json({ limit: "1kb" }));
 
-
 const ipRequests = {};
 
 // Custom rate limiting middleware
@@ -50,10 +49,22 @@ const customRateLimit = (req, res, next) => {
   next();
 };
 
+// Function to log IP addresses and their request counts every 5 seconds
+const logIPRequests = () => {
+  setInterval(() => {
+    console.log('--- Tracked IPs ---');
+    Object.keys(ipRequests).forEach((ip) => {
+      console.log(`${ip}: ${ipRequests[ip].count} requests`);
+    });
+    console.log('-------------------');
+  }, 5000); // Every 5 seconds
+};
+
+// Start logging IP requests
+logIPRequests();
+
 // Apply custom rate limiting middleware globally to all routes
 app.use(customRateLimit);
-
-
 
 
 const dbString = process.env.MONGODB_URL;
