@@ -10,6 +10,28 @@ const expressSession = require("express-session");
 const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
 
+
+const helmet = require("helmet");
+app.use(helmet());
+
+app.use(express.urlencoded({ extended: true, limit: "1kb" }));
+app.use(express.json({ limit: "1kb" }));
+
+
+const rateLimit = require("express-rate-limit");
+const limiter = rateLimit({
+  windowMs: 5 * 60 * 1000,  
+  max: 100, 
+});
+
+app.use(limiter);
+
+
+async function onRateLimit(req, res, options) {
+  res.status(429).send("Too many requests, please try again later.");
+}
+
+
 const dbString = process.env.MONGODB_URL;
 const dbOptions = {
   useNewUrlParser: true,
