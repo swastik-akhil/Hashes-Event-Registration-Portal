@@ -31,7 +31,7 @@ async function sendMail(receiverEmailId, orderId){
 
   try{
     await transporter.sendMail(mailOptions);
-    console.log("Email sent successfully.");
+    console.log(`Email sent to ${receiverEmailId} successfully.`);
   } catch(e){
     console.log("Error while sending email:");
     console.error(e);

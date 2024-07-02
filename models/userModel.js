@@ -8,19 +8,11 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    // unique: true, 
     lowercase: true, 
   },
   profile_photo_url: {
     type: String,
     required: true,
-    // validate: {
-    //   validator: (url) => {
-    //     const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
-    //     return urlRegex.test(url);
-    //   },
-    //   message: 'Invalid URL format for profile photo.',
-    // },
   },
   branch: {
     type: String,
@@ -34,8 +26,6 @@ const userSchema = new mongoose.Schema({
   },
   studentNumber: {
     type: Number,
-    // required: true,
-    // unique: true, 
   },
   // rollNumber: {
   //   type: Number,
